@@ -1,0 +1,5 @@
+export enum ActionType{
+    GET_API="GET_API",
+    GET_API_SUCCESS="GET_API_SUCCESS",
+    GET_API_FAIL="GET_API_FAIL"
+}

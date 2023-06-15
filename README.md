@@ -1,2 +1,10 @@
-# -Calenduck-FE
-바쁜 일상의 효율적인 문화생활 Calenduck
+# 개발환경
+
+React.js 18.2
+Typescript4.4.2
+
+# 실행방법
+npm start
+
+
+
