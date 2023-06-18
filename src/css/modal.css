@@ -3,3 +3,8 @@
 
     background-color: rgba(0, 0, 0, 0.6);
   }
+.img{
+  width: 20vw;
+  height: 30vh;
+  background-color: gray;
+}  

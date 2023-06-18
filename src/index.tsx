@@ -7,21 +7,16 @@ import rootSaga from "./redux/saga/saga";
 import App from "./App";
 import { rootReducer } from "./redux/reducer";
 
-
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(
-  rootReducer,
-  applyMiddleware(sagaMiddleware)
-);
+const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
+	<Provider store={store}>
+		<App />
+	</Provider>,
+	document.getElementById("root"),
 );
- 
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

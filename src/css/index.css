@@ -36,3 +36,10 @@ code {
   background-color: gray;
   margin: 1vw;
 }
+.to_right{
+  float: right;
+}
+.to_left{
+  float: left;
+}
+
