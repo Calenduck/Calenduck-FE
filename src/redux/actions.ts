@@ -1,13 +1,19 @@
-import { ActionType } from "./types"
+import { ActionType } from "./types";
 
-const getApi=()=>{
-    return{
-        type:ActionType.GET_API,
-    }
-}
+const getTotalCheck = () => {
+	return {
+		type: ActionType.GET_TOTAL_CHECK,
+	};
+};
+const getWantList = () => {
+	return {
+		type: ActionType.GET_WANT_LIST,
+	};
+};
 
-type ActionObject=
-|ReturnType<typeof getApi>
+type ActionObject =
+	| ReturnType<typeof getWantList>
+	| ReturnType<typeof getTotalCheck>;
 
-export {getApi}
-export type{ActionObject}
+export { getTotalCheck, getWantList };
+export type { ActionObject };
