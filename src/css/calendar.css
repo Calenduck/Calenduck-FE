@@ -79,3 +79,9 @@ button {
     font-weight: 700;
     border-radius: 50%;
   }
+  .day{
+    width: 10vw;
+  }
+  .weekday{
+    width: 10vw;
+  }
