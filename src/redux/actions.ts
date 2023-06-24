@@ -1,19 +1,28 @@
-import { ActionType } from "./types";
+import { ActionType, InfoObj } from "./types";
 
 const getTotalCheck = () => {
 	return {
 		type: ActionType.GET_TOTAL_CHECK,
 	};
 };
-const getWantList = () => {
+const getWant = () => {
 	return {
 		type: ActionType.GET_WANT_LIST,
 	};
 };
 
-type ActionObject =
-	| ReturnType<typeof getWantList>
-	| ReturnType<typeof getTotalCheck>;
+const setDetailInfo = (payload: InfoObj) => {
+	return {
+		type: ActionType.SET_SELECTED_STATE,
+		payload:payload,
+	};
+};
 
-export { getTotalCheck, getWantList };
-export type { ActionObject };
+type ActionObject =
+	| ReturnType<typeof getWant>
+	| ReturnType<typeof getTotalCheck>
+	
+type ActionInfoObj=	
+| ReturnType<typeof setDetailInfo>;
+export { getTotalCheck, getWant,setDetailInfo };
+export type { ActionObject ,ActionInfoObj};

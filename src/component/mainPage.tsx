@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { response } from "express";
 import { useSelector, useDispatch } from "react-redux";
-import { getApi } from "../redux/actions";
 import { RootState } from "../redux/reducer";
 import LoginModal from "./loginModal";
 import DetailModal from "./detailModal";
@@ -11,14 +10,35 @@ import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
+import { getTotalCheck, setDetailInfo } from "../redux/actions";
+import { InfoObj } from "../redux/types";
 import "../css/index.css";
 
 export default () => {
 	const dispatch = useDispatch();
-	//const listState=useSelector((state:RootState)=>state.getApiReducer)
+	const totalListState: any = useSelector(
+		(state: RootState) => state.getTotalCheckReducer,
+	);
+	let totalListStatePromise: any = [];
+
+	const [totalList, setTotalList] = useState(["1", "2", "3"]);
+	//var totalList = ['1','2','3'];
 	useEffect(() => {
-		//dispatch(getApi())
+		dispatch(getTotalCheck());
 	}, []);
+	useEffect(() => {
+		async function fetchTotal() {
+			if ((await totalListState) != undefined) {
+				totalListStatePromise = await totalListState;
+				if (totalListStatePromise.type == "GET_TOTAL_CHECK_SUCCESS") {
+					console.log(totalListStatePromise.payload.data.data);
+					setTotalList(totalListStatePromise.payload.data.data);
+				}
+			}
+		}
+		fetchTotal();
+	}, [totalListState]);
+
 	const [modalLoginOpen, setModalLoginOpen] = useState(false);
 	const [modalDetailOpen, setModalDetailOpen] = useState(false);
 
@@ -35,10 +55,46 @@ export default () => {
 		setModalDetailOpen(false);
 	};
 
-	const tmpList = ["1", "2", "3"];
-	const infoListMap = tmpList.map((key) => (
-		<div key={key} className="item_style" onClick={showDetailModal}>
-			{key}
+	const setDetailInfoState = (key: any) => {
+		// const selectedObj: InfoObj = {
+		// 	poster : key.poster,
+		// 	prfnm : key.prfnm,
+		// 	prfcast : key.prfcast,
+		// 	genrenm : key.genrenm,
+		// 	fcltynm:key.fcltynm,
+		// 	dtguidance : key.dtguidance,
+		// 	stdate : key.stdate,
+		// 	eddate: key.eddate,
+		// 	pcseguidance:key.pcseguidance,
+		// 	mt20id:key.mt20id
+		// };
+		const selectedObj: InfoObj = {
+			poster : key.poster,
+			prfnm : key.prfnm,
+			prfcast : key.prfcast,
+			// genrenm : key.genrenm,
+			// fcltynm:key.fcltynm,
+			// dtguidance : key.dtguidance,
+			// stdate : key.stdate,
+			// eddate: key.eddate,
+			// pcseguidance:key.pcseguidance,
+			mt20id:key.mt20id
+		};
+		console.log(key)
+		dispatch(setDetailInfo(selectedObj));
+	};
+
+	const infoListMap = totalList.map((key: any) => (
+		<div
+			key={key}
+			className="item_style"
+			onClick={() => {
+				showDetailModal();
+				setDetailInfoState(key);
+			}}
+		>
+			{key.prfnm}
+			<img src={key.poster} className="img"></img>
 		</div>
 	));
 
@@ -76,9 +132,10 @@ export default () => {
 					<TextField id="standard-search" type="search" variant="standard" />
 				</Box>
 				<div className="spacer"></div>
-				<div className="title_sub center-align">장르</div>
+				<div className="title_sub center-align">장르1 </div>
+
 				<div className="flex">{infoListMap}</div>
-				<div className="title_sub center-align">장르</div>
+				<div className="title_sub center-align">장르2</div>
 				<div className="flex">{infoListMap}</div>
 			</div>
 		</div>

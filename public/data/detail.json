@@ -1,0 +1,15 @@
+{
+    "statusCode": 200,
+    "message": "상세 조회 성공",
+    "data": {
+        "poster": "http://www.kopis.or.kr/upload/pfmPoster/PF_PF220613_230621_141038.jpg",
+        "prfnm": "누아르 발레 판타지, SNOW WHITE",
+        "prfcast": "류장현",
+        "genrenm": "무용",
+        "fcltynm": "금정문화회관 (대공연장(금빛누리홀))",
+        "dtguidance": "금요일(19:30)",
+        "stdate": "2023.06.30",
+        "eddate": "2023.06.30",
+        "pcseguidance": "R석 30,000원, S석 20,000원"
+    }
+}

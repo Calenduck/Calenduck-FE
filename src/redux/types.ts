@@ -8,4 +8,20 @@ export enum ActionType {
 	GET_WANT_LIST = "GET_WANT_LIST",
 	GET_WANT_LIST_SUCCESS = "GET_WANT_LIST_SUCCESS",
 	GET_WANT_LIST_FAIL = "GET_WANT_LIST_FAIL",
+
+	//선택목록 상태저장
+	SET_SELECTED_STATE = "SET_SELECTED_STATE",
+}
+
+export interface InfoObj {
+	poster: string;
+	prfnm: string;
+	prfcast: string;
+	genrenm?: string;
+	fcltynm?: string;
+	dtguidance?: string;
+	stdate?: string;
+	eddate?: string;
+	pcseguidance?: string;
+	mt20id:string;
 }

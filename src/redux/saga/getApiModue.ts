@@ -2,21 +2,32 @@
 import { all, fork, put, call, takeLatest } from "redux-saga/effects";
 import { ActionType } from "../types";
 import axios from "axios";
-import { getTotalCheck, getWantList } from "../actions";
+import { getTotalCheck, getWant } from "../actions";
 import { getTotalCheckType,getWantListType } from "../reducer";
 
 //전체조회
-const getTotalCheckList = (action: getTotalCheckType) => {
-	return axios.get("https://api/performances", {
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${process.env.REACT_APP_KEY}`,
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Credentials": true,
-			"Access-Control-Allow-Methods": "GET,POST,OPTIONS,DELETE,PUT",
-		},
-	});
-};
+// const getTotalCheckList = (action: getTotalCheckType) => {
+// 	return axios.get("https://api/performances", {
+// 		headers: {
+// 			"Content-Type": "application/json",
+// 			Authorization: `Bearer ${process.env.REACT_APP_KEY}`,
+// 			"Access-Control-Allow-Origin": "*",
+// 			"Access-Control-Allow-Credentials": true,
+// 			"Access-Control-Allow-Methods": "GET,POST,OPTIONS,DELETE,PUT",
+// 		},
+// 	});
+// };
+const getTotalCheckList = async(action: getTotalCheckType) => {
+		return await axios.get("http://localhost:3000/data/total.json", {
+			headers: {
+				"Content-Type": "application/json",
+				//Authorization: `Bearer ${process.env.REACT_APP_KEY}`,
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Credentials": true,
+				"Access-Control-Allow-Methods": "GET,POST,OPTIONS,DELETE,PUT",
+			},
+		});
+	};
 //찜목록 조회
 const getWantList = (action: getWantListType) => {
 	return axios.get("https://api/users/mypage/calendar", {

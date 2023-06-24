@@ -1,16 +1,21 @@
 import { ActionType } from "./types";
 import { combineReducers } from "redux";
-import { ActionObject } from "./actions";
+import { ActionObject,ActionInfoObj } from "./actions";
+import { InfoObj } from "./types";
 
 export type getTotalCheckType = {
 	type: string;
-	payload: Array;
+	payload: Array<any>;
 };
 export type getWantListType = {
 	type: string;
-	payload: Array;
+	payload: Array<any>;
 };
 
+export type setDetailInfoType = {
+	type: string;
+	payload: InfoObj;
+};
 const getTotalCheckReducer = async (
 	state: getTotalCheckType,
 	action: ActionObject,
@@ -61,9 +66,26 @@ const getWantListReducer = async (
 	}
 };
 
+const setDetailInfoReducer = (
+	state: setDetailInfoType,
+	action: ActionInfoObj,
+) => {
+	switch (action.type) {
+		case ActionType.SET_SELECTED_STATE:
+			console.log(action.payload);
+			return {
+				type: ActionType.SET_SELECTED_STATE,
+				payload:{... action.payload},
+			};
+			default:
+				return null
+	}
+};
+
 const rootReducer = combineReducers({
 	getTotalCheckReducer,
 	getWantListReducer,
+	setDetailInfoReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

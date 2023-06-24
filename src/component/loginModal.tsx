@@ -9,7 +9,7 @@ const loginModal = (props: any) => {
 	const redirect_uri = "http://localhost:3000/auth"; //Redirect URI
 
 	// oauth 요청 URL
-	const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${redirect_uri}&redirect_uri=${redirect_uri}&response_type=code`;
+	const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakao_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 	const handleKakaoLogin = () => {
 		window.location.href = kakaoURL;
 	};
