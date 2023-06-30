@@ -8,20 +8,25 @@ export enum ActionType {
 	GET_WANT_LIST = "GET_WANT_LIST",
 	GET_WANT_LIST_SUCCESS = "GET_WANT_LIST_SUCCESS",
 	GET_WANT_LIST_FAIL = "GET_WANT_LIST_FAIL",
+	//찜목록 추가/취소
+	POST_WANT_LIST_ADD = "POST_WANT_LIST_ADD",
+	POST_WANT_LIST_ADD_SUCCESS = "POST_WANT_LIST_ADD_SUCCESS",
+	POST_WANT_LIST_ADD_FAIL = "POST_WANT_LIST_ADD_FAIL",
 
 	//선택목록 상태저장
 	SET_SELECTED_STATE = "SET_SELECTED_STATE",
 }
 
 export interface InfoObj {
-	poster: string;
-	prfnm: string;
-	prfcast: string;
+	poster?: string;
+	prfnm?: string;
+	prfcast?: string;
 	genrenm?: string;
 	fcltynm?: string;
 	dtguidance?: string;
-	stdate?: string;
-	eddate?: string;
+	prfpdfrom?: string;
+	prfpdto?: string;
 	pcseguidance?: string;
-	mt20id:string;
+	mt20id?: string;
+	day?: string;
 }

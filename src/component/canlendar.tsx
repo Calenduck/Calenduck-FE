@@ -1,10 +1,93 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames/bind";
+import { getWant } from "../redux/actions";
+import { RootState } from "../redux/reducer";
+import SaveModal from "./saveModal";
+
 import "../css/calendar.css";
+import { stringify } from "querystring";
+import { InfoObj } from "../redux/types";
+
 
 //const cx = classNames.bind(style);
 
 const Calendar = () => {
+	const ref = useRef(null);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(getWant());
+	}, []);
+
+	const wantInfo: any = useSelector(
+		(state: RootState) => state.getWantListReducer,
+	);
+
+	const [wantInfoState, setWantInfoState] = useState<Array<InfoObj>>();
+	const [modalSaveOpen, setModalSaveOpen] = useState(false);
+	const [allDayOpen, setAllDayOpen] = useState(true);
+	const [weekDayOpen, setWeekDayOpen] = useState(false);
+	const [renderWantInfoState, setRenderWantInfoState] = useState<Array<any>>(
+		new Array(32),
+	);
+	let wantListStatePromise: any = [1];
+
+	const closeSaveModal = () => {
+		setModalSaveOpen(false);
+	};
+	const showSaveModal = () => {
+		
+		setModalSaveOpen(!modalSaveOpen);
+		console.log(modalSaveOpen)
+	};
+	useEffect(() => {
+		async function fetchWant() {
+			if ((await wantInfo) != null) {
+				wantListStatePromise = await wantInfo;
+				if (wantListStatePromise.type == "GET_WANT_LIST_SUCCESS")
+					//console.log(wantListStatePromise.payload.data.data)
+					await setWantInfoState(wantListStatePromise.payload.data.data);
+			}
+		}
+
+		fetchWant();
+	}, [wantInfo]);
+
+	useEffect(() => {
+		checkId();
+	}, [wantInfoState]);
+
+
+	const checkId = () => {
+		if (wantInfoState) {
+			for (let i = 0; i < wantInfoState.length; i++) {
+				const wsplit = wantInfoState[i].day!.split(".");
+				console.log(wsplit)
+				const wyaer = wsplit[0];
+				const wmonth = String(parseInt(wsplit[1]));
+				const wday = wsplit[2];
+				const element = document.getElementById(wday + wyaer + wmonth);
+				console.log(wday + wyaer + wmonth)
+				if (element) {
+					console.log(element);
+					const name=`<div style='font-size:10px'>${wantInfoState[i].prfnm}</div>`
+					//element.innerHTML = String(wantInfoState[i].prfnm);
+					element.innerHTML+=name
+				}
+			}
+		}
+
+		// }
+		// if(ref.current){
+		// 	console.log(ref.current.child)
+		// }
+		// const el=document.getElementById("2620236")
+		// console.log(el)
+		// if(el){
+		// 	el.innerHTML = '30px';
+		// }
+	};
+
 	const today = {
 		year: new Date().getFullYear(), //오늘 연도
 		month: new Date().getMonth() + 1, //오늘 월
@@ -87,13 +170,36 @@ const Calendar = () => {
 		//요일 반환 함수
 		const weekArr: any = [];
 		week.forEach((v) => {
-			weekArr.push(<div className="day" key={v}>{v}</div>);
+			weekArr.push(
+				<div className="day" key={v}>
+					{v}
+				</div>,
+			);
 		});
 		return weekArr;
 	}, []);
-  const onClickDate=(e:any)=>{
-    console.log(e)
-  }
+	const onClickDate = (e: any) => {
+		console.log(e);
+	};
+	//let wantI = -1;
+	// const checkWantList = (year: number, month: number, day: number) => {
+	// 	if (wantInfoState) {
+	// 		for (let i = 0; i < wantInfoState.length; i++) {
+	// 			//console.log(wantInfoState[i].day)
+	// 			const wsplit = wantInfoState[i].day.split(".");
+	// 			const wyaer = parseInt(wsplit[0]);
+	// 			const wmonth = parseInt(wsplit[1]);
+	// 			const wday = parseInt(wsplit[2]);
+	// 			//console.log(day);
+	// 			if (year === wyaer && month === wmonth && day === wday) {
+	// 				console.log(i);
+	// 				wantI = i;
+	// 			} else {
+	// 				wantI = -1;
+	// 			}
+	// 		}
+	// 	}
+	// };
 
 	const returnDay = useCallback(() => {
 		//선택된 달의 날짜들 반환 함수
@@ -101,13 +207,21 @@ const Calendar = () => {
 
 		for (const nowDay of week) {
 			const day = new Date(selectedYear, selectedMonth - 1, 1).getDay();
+			//console.log(wantListI)
 			if (week[day] === nowDay) {
 				for (let i = 0; i < dateTotalCount; i++) {
+					//checkWantList(selectedYear, selectedMonth, i + 1);
+					//if (wantI) {
+					//console.log(wantI);
 					dayArr.push(
 						<div
-							key={i + 1}
-              className="weekday"
-              onClick={()=>{onClickDate(i+1)} }
+							key={String(i + 1) + String(selectedYear) + String(selectedMonth)}
+							className="weekday"
+							id={String(i + 1) + String(selectedYear) + String(selectedMonth)}
+							onClick={() => {
+								onClickDate(i + 1);
+								showSaveModal();
+							}}
 							//   className={cx(
 							//     {
 							//       //오늘 날짜일 때 표시할 스타일 클라스네임
@@ -130,7 +244,7 @@ const Calendar = () => {
 							//       //전체 토요일 스타일
 							//       saturday:
 							//         new Date(
-							//           selectedYear,
+							//           selectedYear
 							//           selectedMonth - 1,
 							//           i + 1
 							//         ).getDay() === 6,
@@ -138,8 +252,15 @@ const Calendar = () => {
 							//   )}
 						>
 							{i + 1}
+
+							{/* {wantInfoState[wantI] != undefined ? (
+								<div>{wantInfoState[wantI].prfnm}</div>
+							) : (
+								""
+							)} */}
 						</div>,
 					);
+					//	}
 				}
 			} else {
 				dayArr.push(<div className="weekday"></div>);
@@ -160,8 +281,12 @@ const Calendar = () => {
 					<button onClick={nextMonth}>▶︎</button>
 				</div>
 			</div>
+			<SaveModal open={modalSaveOpen} close={closeSaveModal}  />
+
 			<div className="week">{returnWeek()}</div>
-			<div className="date">{returnDay()}</div>
+			<div className="date" ref={ref}>
+				{returnDay()}
+			</div>
 		</div>
 	);
 };

@@ -1,6 +1,6 @@
 import { ActionType } from "./types";
 import { combineReducers } from "redux";
-import { ActionObject,ActionInfoObj } from "./actions";
+import { ActionObject, ActionInfoObj } from "./actions";
 import { InfoObj } from "./types";
 
 export type getTotalCheckType = {
@@ -16,6 +16,11 @@ export type setDetailInfoType = {
 	type: string;
 	payload: InfoObj;
 };
+
+export type postWantListAddType = {
+	type: string;
+};
+
 const getTotalCheckReducer = async (
 	state: getTotalCheckType,
 	action: ActionObject,
@@ -65,6 +70,28 @@ const getWantListReducer = async (
 			};
 	}
 };
+const postWantListAddReducer = async (
+	state: postWantListAddType,
+	action: ActionObject,
+) => {
+	switch (action.type) {
+		case ActionType.POST_WANT_LIST_ADD:
+			return {
+				type: ActionType.POST_WANT_LIST_ADD,
+				action: action,
+			};
+		case ActionType.POST_WANT_LIST_ADD_SUCCESS:
+			console.log(state);
+			console.log(action);
+			return {
+				type: ActionType.POST_WANT_LIST_ADD_SUCCESS,
+			};
+		case ActionType.POST_WANT_LIST_ADD_FAIL:
+			return {
+				type: ActionType.POST_WANT_LIST_ADD_FAIL,
+			};
+	}
+};
 
 const setDetailInfoReducer = (
 	state: setDetailInfoType,
@@ -75,10 +102,10 @@ const setDetailInfoReducer = (
 			console.log(action.payload);
 			return {
 				type: ActionType.SET_SELECTED_STATE,
-				payload:{... action.payload},
+				payload: { ...action.payload },
 			};
-			default:
-				return null
+		default:
+			return null;
 	}
 };
 
@@ -86,6 +113,7 @@ const rootReducer = combineReducers({
 	getTotalCheckReducer,
 	getWantListReducer,
 	setDetailInfoReducer,
+	postWantListAddReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
