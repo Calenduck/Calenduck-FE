@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import "../src/css/index.css"
 import MainPage from "./component/mainPage";
 import WantListPage from "./component/wantListPage";
 import LoginPage from "./component/loginPage";

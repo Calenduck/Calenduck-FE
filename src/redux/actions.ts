@@ -1,5 +1,11 @@
 import { ActionType, InfoObj } from "./types";
 
+const getLoginAction = (code: string) => {
+	return {
+		type: ActionType.GET_LOGIN,
+		payload: code,
+	};
+};
 const getTotalCheck = () => {
 	return {
 		type: ActionType.GET_TOTAL_CHECK,
@@ -37,8 +43,9 @@ const setDetailInfo = (payload: InfoObj) => {
 type ActionObject =
 	| ReturnType<typeof getWant>
 	| ReturnType<typeof getTotalCheck>
-	| ReturnType<typeof postWantAdd>;
+	| ReturnType<typeof postWantAdd>
+	| ReturnType<typeof getLoginAction>;
 
 type ActionInfoObj = ReturnType<typeof setDetailInfo>;
-export { getTotalCheck, getWant, setDetailInfo, postWantAdd };
+export { getTotalCheck, getWant, setDetailInfo, postWantAdd, getLoginAction };
 export type { ActionObject, ActionInfoObj };

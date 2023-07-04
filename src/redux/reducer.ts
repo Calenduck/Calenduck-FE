@@ -3,6 +3,10 @@ import { combineReducers } from "redux";
 import { ActionObject, ActionInfoObj } from "./actions";
 import { InfoObj } from "./types";
 
+export type getLoginType = {
+	type: string;
+	payload: any;
+};
 export type getTotalCheckType = {
 	type: string;
 	payload: Array<any>;
@@ -19,6 +23,30 @@ export type setDetailInfoType = {
 
 export type postWantListAddType = {
 	type: string;
+};
+
+const getLoginReducer = async (
+	state: getLoginType,
+	action: ActionObject,
+) => {
+	switch (action.type) {
+		case ActionType.GET_LOGIN:
+			return {
+				type: ActionType.GET_LOGIN,
+			};
+		case ActionType.GET_LOGIN_SUCCESS:
+			console.log(state);
+			console.log(action);
+			return {
+				type: ActionType.GET_LOGIN_SUCCESS,
+				payload: action,
+			};
+		case ActionType.GET_LOGIN_FAIL:
+			return {
+				type: ActionType.GET_LOGIN_FAIL,
+				payload: "fail",
+			};
+	}
 };
 
 const getTotalCheckReducer = async (

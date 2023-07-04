@@ -8,8 +8,7 @@ import SaveModal from "./saveModal";
 import "../css/calendar.css";
 import { stringify } from "querystring";
 import { InfoObj } from "../redux/types";
-
-
+import { addDays, addHours, format, setHours } from "date-fns";
 //const cx = classNames.bind(style);
 
 const Calendar = () => {
@@ -22,9 +21,20 @@ const Calendar = () => {
 	const wantInfo: any = useSelector(
 		(state: RootState) => state.getWantListReducer,
 	);
-
+	const nowDay = new Date();
+	const today = {
+		year: new Date().getFullYear(), //오늘 연도
+		month: new Date().getMonth() + 1, //오늘 월
+		date: new Date().getDate(), //오늘 날짜
+		day: new Date().getDay(), //오늘 요일
+	};
+	const week = ["일", "월", "화", "수", "목", "금", "토"]; //일주일
+	const [selectedYear, setSelectedYear] = useState(today.year); //현재 선택된 연도
+	const [selectedMonth, setSelectedMonth] = useState(today.month); //현재 선택된 달
+	const dateTotalCount = new Date(selectedYear, selectedMonth, 0).getDate(); //선택된 연도, 달의 마지막 날짜
 	const [wantInfoState, setWantInfoState] = useState<Array<InfoObj>>();
 	const [modalSaveOpen, setModalSaveOpen] = useState(false);
+	const [showRange, setShowRange] = useState("Month");
 	const [allDayOpen, setAllDayOpen] = useState(true);
 	const [weekDayOpen, setWeekDayOpen] = useState(false);
 	const [renderWantInfoState, setRenderWantInfoState] = useState<Array<any>>(
@@ -36,9 +46,8 @@ const Calendar = () => {
 		setModalSaveOpen(false);
 	};
 	const showSaveModal = () => {
-		
 		setModalSaveOpen(!modalSaveOpen);
-		console.log(modalSaveOpen)
+		console.log(modalSaveOpen);
 	};
 	useEffect(() => {
 		async function fetchWant() {
@@ -56,23 +65,28 @@ const Calendar = () => {
 	useEffect(() => {
 		checkId();
 	}, [wantInfoState]);
-
+	useEffect(() => {
+		checkId();
+	}, [selectedMonth]);
+	useEffect(() => {
+		checkId();
+	}, [showRange]);
 
 	const checkId = () => {
 		if (wantInfoState) {
 			for (let i = 0; i < wantInfoState.length; i++) {
 				const wsplit = wantInfoState[i].day!.split(".");
-				console.log(wsplit)
+				console.log(wsplit);
 				const wyaer = wsplit[0];
 				const wmonth = String(parseInt(wsplit[1]));
 				const wday = wsplit[2];
 				const element = document.getElementById(wday + wyaer + wmonth);
-				console.log(wday + wyaer + wmonth)
+				console.log(wday + wyaer + wmonth);
 				if (element) {
 					console.log(element);
-					const name=`<div style='font-size:10px'>${wantInfoState[i].prfnm}</div>`
+					const name = `<div style='font-size:10px'>${wantInfoState[i].prfnm}</div>`;
 					//element.innerHTML = String(wantInfoState[i].prfnm);
-					element.innerHTML+=name
+					element.innerHTML += name;
 				}
 			}
 		}
@@ -87,17 +101,6 @@ const Calendar = () => {
 		// 	el.innerHTML = '30px';
 		// }
 	};
-
-	const today = {
-		year: new Date().getFullYear(), //오늘 연도
-		month: new Date().getMonth() + 1, //오늘 월
-		date: new Date().getDate(), //오늘 날짜
-		day: new Date().getDay(), //오늘 요일
-	};
-	const week = ["일", "월", "화", "수", "목", "금", "토"]; //일주일
-	const [selectedYear, setSelectedYear] = useState(today.year); //현재 선택된 연도
-	const [selectedMonth, setSelectedMonth] = useState(today.month); //현재 선택된 달
-	const dateTotalCount = new Date(selectedYear, selectedMonth, 0).getDate(); //선택된 연도, 달의 마지막 날짜
 
 	const prevMonth = useCallback(() => {
 		//이전 달 보기 보튼
@@ -200,6 +203,41 @@ const Calendar = () => {
 	// 		}
 	// 	}
 	// };
+	const returnWeekDay = () => {
+		const weekdayArr = [];
+		var tmpday: Date;
+		console.log(today.day);
+		tmpday = addDays(nowDay, today.day * -1);
+		for (let i = 0; i < 7; i++) {
+			weekdayArr.push(
+				<div
+					id={
+						String(tmpday.getDate() + i) +
+						String(today.year) +
+						String(today.month)
+					}
+					className=" border"
+				>
+					{String(tmpday.getDate() + i)}
+				</div>,
+			);
+		}
+		return weekdayArr;
+	};
+	const returnDayDay = () => {
+		
+
+		
+		return(
+			<div id={	String(today.date) +
+				String(today.year) +
+				String(today.month)}
+				className="border"
+				>
+				{String(today.date)}
+			</div>
+		)
+	};
 
 	const returnDay = useCallback(() => {
 		//선택된 달의 날짜들 반환 함수
@@ -269,7 +307,9 @@ const Calendar = () => {
 
 		return dayArr;
 	}, [selectedYear, selectedMonth, dateTotalCount]);
-
+	const mwdSelect = (mwd: string) => {
+		setShowRange(mwd);
+	};
 	return (
 		<div className="container">
 			<div className="title">
@@ -281,12 +321,28 @@ const Calendar = () => {
 					<button onClick={nextMonth}>▶︎</button>
 				</div>
 			</div>
-			<SaveModal open={modalSaveOpen} close={closeSaveModal}  />
-
-			<div className="week">{returnWeek()}</div>
-			<div className="date" ref={ref}>
-				{returnDay()}
+			<div className=" flex  ">
+				<div className="border" onClick={() => mwdSelect("Month")}>month</div>
+				<div className="border"onClick={() => mwdSelect("week")}>week</div>
+				<div className="border"onClick={() => mwdSelect("day")}>day</div>
 			</div>
+			<SaveModal open={modalSaveOpen} close={closeSaveModal} />
+			{showRange == "Month" ? (
+				<div>
+					<div className="week">{returnWeek()}</div>
+					<div className="date" ref={ref}>
+						{returnDay()}
+					</div>
+				</div>
+			) : (
+				<div>
+					{showRange == "week" ? (
+						<div className="flex">{returnWeekDay()}</div>
+					) : (
+						<div>{returnDayDay()}</div>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };
