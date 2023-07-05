@@ -205,9 +205,9 @@ const Calendar = () => {
 	// };
 	const returnWeekDay = () => {
 		const weekdayArr = [];
-		var tmpday: Date;
+
 		console.log(today.day);
-		tmpday = addDays(nowDay, today.day * -1);
+		const tmpday: Date = addDays(nowDay, today.day * -1);
 		for (let i = 0; i < 7; i++) {
 			weekdayArr.push(
 				<div
@@ -225,20 +225,31 @@ const Calendar = () => {
 		return weekdayArr;
 	};
 	const returnDayDay = () => {
-		
-
-		
-		return(
-			<div id={	String(today.date) +
-				String(today.year) +
-				String(today.month)}
+		return (
+			<div
+				id={String(today.date) + String(today.year) + String(today.month)}
 				className="border"
-				>
+			>
 				{String(today.date)}
 			</div>
-		)
+		);
 	};
-
+	const calenderHover = (day: number, year: number, month: number) => {
+		const btn = document.getElementById(
+			String(day) + String(year) + String(month) + "+",
+		);
+		if (btn) {
+			btn.style.visibility = "visible";
+		}
+	};
+	const calenderLeave = (day: number, year: number, month: number) => {
+		const btn = document.getElementById(
+			String(day) + String(year) + String(month) + "+",
+		);
+		if (btn) {
+			btn.style.visibility = "hidden";
+		}
+	};
 	const returnDay = useCallback(() => {
 		//선택된 달의 날짜들 반환 함수
 		const dayArr = [];
@@ -254,11 +265,17 @@ const Calendar = () => {
 					dayArr.push(
 						<div
 							key={String(i + 1) + String(selectedYear) + String(selectedMonth)}
-							className="weekday"
+							className="weekday border"
 							id={String(i + 1) + String(selectedYear) + String(selectedMonth)}
-							onClick={() => {
-								onClickDate(i + 1);
-								showSaveModal();
+							// onClick={() => {
+							// 	onClickDate(i + 1);
+							// 	showSaveModal();
+							// }}
+							onMouseOver={() => {
+								calenderHover(i + 1, selectedYear, selectedMonth);
+							}}
+							onMouseLeave={() => {
+								calenderLeave(i + 1, selectedYear, selectedMonth);
 							}}
 							//   className={cx(
 							//     {
@@ -289,6 +306,21 @@ const Calendar = () => {
 							//     }
 							//   )}
 						>
+							<button
+								className="btn-hide border"
+								id={
+									String(i + 1) +
+									String(selectedYear) +
+									String(selectedMonth) +
+									"+"
+								}
+								onClick={() => {
+										onClickDate(i + 1);
+										showSaveModal();
+									}}
+							>
+								+
+							</button>
 							{i + 1}
 
 							{/* {wantInfoState[wantI] != undefined ? (
@@ -322,9 +354,15 @@ const Calendar = () => {
 				</div>
 			</div>
 			<div className=" flex  ">
-				<div className="border" onClick={() => mwdSelect("Month")}>month</div>
-				<div className="border"onClick={() => mwdSelect("week")}>week</div>
-				<div className="border"onClick={() => mwdSelect("day")}>day</div>
+				<div className="border" onClick={() => mwdSelect("Month")}>
+					month
+				</div>
+				<div className="border" onClick={() => mwdSelect("week")}>
+					week
+				</div>
+				<div className="border" onClick={() => mwdSelect("day")}>
+					day
+				</div>
 			</div>
 			<SaveModal open={modalSaveOpen} close={closeSaveModal} />
 			{showRange == "Month" ? (
