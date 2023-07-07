@@ -9,10 +9,12 @@ import { InfoObj } from "../redux/types";
 import { postWantAdd } from "../redux/actions";
 
 const SaveModal = (props: any) => {
-	const { open, close, id } = props;
+	const { open, close, year,month,day } = props;
 	const dispatch = useDispatch();
 	const saveWantList = () => {
-		dispatch(postWantAdd("test", "2023", "06", "30"));
+		//console.log(year)
+		dispatch(postWantAdd(detailInfoState.mt20id!, year, month, day));
+		//location.reload()
 	};
 	const detailInfo: any = useSelector(
 		(state: RootState) => state.setDetailInfoReducer,

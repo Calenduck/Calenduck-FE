@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { getTotalCheck, setDetailInfo } from "../redux/actions";
 import { InfoObj } from "../redux/types";
+import { addDays, addHours, format, setHours } from "date-fns";
 import "../css/index.css";
 
 export default () => {
@@ -19,9 +20,11 @@ export default () => {
 	const totalListState: any = useSelector(
 		(state: RootState) => state.getTotalCheckReducer,
 	);
+	const getLoginJwt = useSelector((state: RootState) => state.getLoginReducer);
 	let totalListStatePromise: any = [];
-
+	const today=new Date()
 	const [totalList, setTotalList] = useState(["1", "2", "3"]);
+	const [checkJwt, setCheckJwt] = useState(false);
 	//var totalList = ['1','2','3'];
 	useEffect(() => {
 		dispatch(getTotalCheck());
@@ -32,13 +35,41 @@ export default () => {
 				totalListStatePromise = await totalListState;
 				if (totalListStatePromise.type == "GET_TOTAL_CHECK_SUCCESS") {
 					console.log(totalListStatePromise.payload.data.data);
-					setTotalList(totalListStatePromise.payload.data.data);
+					const dataList: Array<any> = totalListStatePromise.payload.data.data;
+					const tArr=[]
+					for (let i = 0; i < dataList.length; i++) {
+						
+						const tmpSplit =dataList[i].stdate.split(".");
+						const y = tmpSplit[0];
+						const m = tmpSplit[1];
+						const d = tmpSplit[2];
+						const newDay = new Date();
+						const wbDay=addDays(newDay,-7)
+						newDay.setFullYear(parseInt(y));
+						newDay.setMonth(parseInt(m));
+						newDay.setDate(parseInt(d));
+						dataList[i].stdate = newDay;
+						if(newDay>=wbDay && newDay<today &&tArr.length<6){
+							tArr.push(dataList[i])
+						}
+					}
+					setTotalList(tArr);
+					// dataList.sort((a: any, b: any) => {
+					// 	return b.stdate - a.stdate;
+					// });
+					// console.log(dataList);
 				}
 			}
 		}
 		fetchTotal();
 	}, [totalListState]);
-
+	useEffect(() => {
+		const getJwt = localStorage.getItem("jwt");
+		if (getJwt) {
+			setCheckJwt(true);
+		}
+		//
+	}, []);
 	const [modalLoginOpen, setModalLoginOpen] = useState(false);
 	const [modalDetailOpen, setModalDetailOpen] = useState(false);
 
@@ -54,7 +85,10 @@ export default () => {
 	const closeDetailModal = () => {
 		setModalDetailOpen(false);
 	};
-
+	const onClickLogout=()=>{
+		localStorage.removeItem('jwt')
+		location.reload()
+	}
 	const setDetailInfoState = (key: any) => {
 		// const selectedObj: InfoObj = {
 		// 	poster : key.poster,
@@ -69,18 +103,18 @@ export default () => {
 		// 	mt20id:key.mt20id
 		// };
 		const selectedObj: InfoObj = {
-			poster : key.poster,
-			prfnm : key.prfnm,
-			prfcast : key.prfcast,
+			poster: key.poster,
+			prfnm: key.prfnm,
+			prfcast: key.prfcast,
 			// genrenm : key.genrenm,
 			// fcltynm:key.fcltynm,
 			// dtguidance : key.dtguidance,
 			// stdate : key.stdate,
 			// eddate: key.eddate,
 			// pcseguidance:key.pcseguidance,
-			mt20id:key.mt20id
+			mt20id: key.mt20id,
 		};
-		console.log(key)
+		console.log(key);
 		dispatch(setDetailInfo(selectedObj));
 	};
 
@@ -100,8 +134,14 @@ export default () => {
 
 	return (
 		<div>
-			<div>Test </div>
-			<button onClick={showLoginModal}>login</button>
+			{checkJwt ? (<div className=" flex">
+				<div>마이페이지</div>
+				<div onClick={()=>onClickLogout()}>로그아웃</div>
+			</div>
+				
+			) : (
+				<button onClick={showLoginModal}>login</button>
+			)}
 
 			<div className="center_aligin">
 				<LoginModal open={modalLoginOpen} close={closeLoginModal} />

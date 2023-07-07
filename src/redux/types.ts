@@ -33,5 +33,6 @@ export interface InfoObj {
 	prfpdto?: string;
 	pcseguidance?: string;
 	mt20id?: string;
-	day?: string;
+	reservationDate?: string;
+
 }

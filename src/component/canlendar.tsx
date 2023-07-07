@@ -31,6 +31,7 @@ const Calendar = () => {
 	const week = ["일", "월", "화", "수", "목", "금", "토"]; //일주일
 	const [selectedYear, setSelectedYear] = useState(today.year); //현재 선택된 연도
 	const [selectedMonth, setSelectedMonth] = useState(today.month); //현재 선택된 달
+	const [selectedDay, setSelectedDay] = useState(0); //현재 선택된 달
 	const dateTotalCount = new Date(selectedYear, selectedMonth, 0).getDate(); //선택된 연도, 달의 마지막 날짜
 	const [wantInfoState, setWantInfoState] = useState<Array<InfoObj>>();
 	const [modalSaveOpen, setModalSaveOpen] = useState(false);
@@ -64,6 +65,7 @@ const Calendar = () => {
 
 	useEffect(() => {
 		checkId();
+		console.log(localStorage.getItem('jwt'))
 	}, [wantInfoState]);
 	useEffect(() => {
 		checkId();
@@ -75,12 +77,16 @@ const Calendar = () => {
 	const checkId = () => {
 		if (wantInfoState) {
 			for (let i = 0; i < wantInfoState.length; i++) {
-				const wsplit = wantInfoState[i].day!.split(".");
+				//const wsplit = wantInfoState[i].reservationDate!.split(".");
+				const wsplit = wantInfoState[i].reservationDate!;
 				console.log(wsplit);
-				const wyaer = wsplit[0];
-				const wmonth = String(parseInt(wsplit[1]));
-				const wday = wsplit[2];
-				const element = document.getElementById(wday + wyaer + wmonth);
+				const wyaer = wsplit[0]+wsplit[1]+wsplit[2]+wsplit[3];
+				let wmonth = wsplit[4]+wsplit[5];
+				wmonth= String(parseInt(wmonth))
+				let wday = wsplit[6]+wsplit[7];
+				wday= String(parseInt(wday))
+				
+				const element = document.getElementById(String(parseInt(wday)) + wyaer + wmonth);
 				console.log(wday + wyaer + wmonth);
 				if (element) {
 					console.log(element);
@@ -317,6 +323,7 @@ const Calendar = () => {
 								onClick={() => {
 										onClickDate(i + 1);
 										showSaveModal();
+										setSelectedDay(i+1)
 									}}
 							>
 								+
@@ -364,7 +371,7 @@ const Calendar = () => {
 					day
 				</div>
 			</div>
-			<SaveModal open={modalSaveOpen} close={closeSaveModal} />
+			<SaveModal open={modalSaveOpen} close={closeSaveModal} year={selectedYear} month={selectedMonth} day={selectedDay}/>
 			{showRange == "Month" ? (
 				<div>
 					<div className="week">{returnWeek()}</div>

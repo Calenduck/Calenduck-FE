@@ -23,6 +23,7 @@ export type setDetailInfoType = {
 
 export type postWantListAddType = {
 	type: string;
+	payload:any
 };
 
 const getLoginReducer = async (
@@ -35,11 +36,10 @@ const getLoginReducer = async (
 				type: ActionType.GET_LOGIN,
 			};
 		case ActionType.GET_LOGIN_SUCCESS:
-			console.log(state);
-			console.log(action);
+
 			return {
 				type: ActionType.GET_LOGIN_SUCCESS,
-				payload: action,
+				payload:await action,
 			};
 		case ActionType.GET_LOGIN_FAIL:
 			return {
@@ -138,6 +138,7 @@ const setDetailInfoReducer = (
 };
 
 const rootReducer = combineReducers({
+	getLoginReducer,
 	getTotalCheckReducer,
 	getWantListReducer,
 	setDetailInfoReducer,
