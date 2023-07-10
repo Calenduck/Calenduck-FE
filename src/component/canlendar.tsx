@@ -10,7 +10,7 @@ import { stringify } from "querystring";
 import { InfoObj } from "../redux/types";
 import { addDays, addHours, format, setHours } from "date-fns";
 //const cx = classNames.bind(style);
-
+const week = ["일", "월", "화", "수", "목", "금", "토"]; //일주일
 const Calendar = () => {
 	const ref = useRef(null);
 	const dispatch = useDispatch();
@@ -65,7 +65,7 @@ const Calendar = () => {
 
 	useEffect(() => {
 		checkId();
-		console.log(localStorage.getItem('jwt'))
+		console.log(localStorage.getItem("jwt"));
 	}, [wantInfoState]);
 	useEffect(() => {
 		checkId();
@@ -80,13 +80,15 @@ const Calendar = () => {
 				//const wsplit = wantInfoState[i].reservationDate!.split(".");
 				const wsplit = wantInfoState[i].reservationDate!;
 				console.log(wsplit);
-				const wyaer = wsplit[0]+wsplit[1]+wsplit[2]+wsplit[3];
-				let wmonth = wsplit[4]+wsplit[5];
-				wmonth= String(parseInt(wmonth))
-				let wday = wsplit[6]+wsplit[7];
-				wday= String(parseInt(wday))
-				
-				const element = document.getElementById(String(parseInt(wday)) + wyaer + wmonth);
+				const wyaer = wsplit[0] + wsplit[1] + wsplit[2] + wsplit[3];
+				let wmonth = wsplit[4] + wsplit[5];
+				wmonth = String(parseInt(wmonth));
+				let wday = wsplit[6] + wsplit[7];
+				wday = String(parseInt(wday));
+
+				const element = document.getElementById(
+					String(parseInt(wday)) + wyaer + wmonth,
+				);
 				console.log(wday + wyaer + wmonth);
 				if (element) {
 					console.log(element);
@@ -180,7 +182,7 @@ const Calendar = () => {
 		const weekArr: any = [];
 		week.forEach((v) => {
 			weekArr.push(
-				<div className="day" key={v}>
+				<div className="day bg-yellow-300 text-center" key={v}>
 					{v}
 				</div>,
 			);
@@ -222,9 +224,13 @@ const Calendar = () => {
 						String(today.year) +
 						String(today.month)
 					}
-					className=" border"
+					className=" border h-[200px]"
 				>
-					{String(tmpday.getDate() + i)}
+					<div className=" bg-yellow-300">
+						{String(tmpday.getDate() + i)}
+					{week[i]}
+					</div>
+					
 				</div>,
 			);
 		}
@@ -234,9 +240,12 @@ const Calendar = () => {
 		return (
 			<div
 				id={String(today.date) + String(today.year) + String(today.month)}
-				className="border"
+				className="border w-full h-[400px]"
 			>
-				{String(today.date)}
+				<div className=" bg-yellow-300">
+					{String(today.date)}
+				</div>
+				
 			</div>
 		);
 	};
@@ -271,7 +280,7 @@ const Calendar = () => {
 					dayArr.push(
 						<div
 							key={String(i + 1) + String(selectedYear) + String(selectedMonth)}
-							className="weekday border"
+							className="weekday border  bg-gray-300"
 							id={String(i + 1) + String(selectedYear) + String(selectedMonth)}
 							// onClick={() => {
 							// 	onClickDate(i + 1);
@@ -312,23 +321,25 @@ const Calendar = () => {
 							//     }
 							//   )}
 						>
-							<button
-								className="btn-hide border"
-								id={
-									String(i + 1) +
-									String(selectedYear) +
-									String(selectedMonth) +
-									"+"
-								}
-								onClick={() => {
+							<div className="grid grid-cols-8">
+								<button
+									className="btn-hide border col-start-1 h-[20px] w-[20px] bg-white"
+									id={
+										String(i + 1) +
+										String(selectedYear) +
+										String(selectedMonth) +
+										"+"
+									}
+									onClick={() => {
 										onClickDate(i + 1);
 										showSaveModal();
-										setSelectedDay(i+1)
+										setSelectedDay(i + 1);
 									}}
-							>
-								+
-							</button>
-							{i + 1}
+								>
+									<div className="-mt-5">+</div>
+								</button>
+								<div className="col-start-7 text-xs">{i + 1}</div>
+							</div>
 
 							{/* {wantInfoState[wantI] != undefined ? (
 								<div>{wantInfoState[wantI].prfnm}</div>
@@ -350,7 +361,7 @@ const Calendar = () => {
 		setShowRange(mwd);
 	};
 	return (
-		<div className="container">
+		<div className="container w-3/6">
 			<div className="title">
 				<h3>
 					{yearControl()}년 {monthControl()}월
@@ -360,29 +371,40 @@ const Calendar = () => {
 					<button onClick={nextMonth}>▶︎</button>
 				</div>
 			</div>
-			<div className=" flex  ">
-				<div className="border" onClick={() => mwdSelect("Month")}>
-					month
-				</div>
-				<div className="border" onClick={() => mwdSelect("week")}>
-					week
-				</div>
-				<div className="border" onClick={() => mwdSelect("day")}>
-					day
+			<div className="grid grid-cols-5 mb-2 ">
+				<div className="grid grid-cols-4  col-start-3 col-span-3 bg-red-400 text-center rounded-lg">
+					<div className="" onClick={() => mwdSelect("Month")}>
+						month
+					</div>
+					<div className="" onClick={() => mwdSelect("week")}>
+						week
+					</div>
+					<div className="" onClick={() => mwdSelect("day")}>
+						day
+					</div>
+					<div className="" >
+						예약메시지
+					</div>
 				</div>
 			</div>
-			<SaveModal open={modalSaveOpen} close={closeSaveModal} year={selectedYear} month={selectedMonth} day={selectedDay}/>
+			<SaveModal
+				open={modalSaveOpen}
+				close={closeSaveModal}
+				year={selectedYear}
+				month={selectedMonth}
+				day={selectedDay}
+			/>
 			{showRange == "Month" ? (
 				<div>
 					<div className="week">{returnWeek()}</div>
-					<div className="date" ref={ref}>
+					<div className="date bg-gray-400" ref={ref}>
 						{returnDay()}
 					</div>
 				</div>
 			) : (
 				<div>
 					{showRange == "week" ? (
-						<div className="flex">{returnWeekDay()}</div>
+						<div className="grid grid-cols-4">{returnWeekDay()}</div>
 					) : (
 						<div>{returnDayDay()}</div>
 					)}

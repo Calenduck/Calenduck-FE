@@ -81,8 +81,7 @@ const postWantListAdd = (action: postWantListAddType) => {
 		`http://${apiAddress}:8080/performances/${action.payload.mt20id}/bookmark/${action.payload.year}/${action.payload.month}/${action.payload.day}`,
 		{
 			headers: {
-				"Accept": "application/json",
-				"Content-Type": "application/json; charset=UTF-8",
+				"Content-Type": "application/json",
 				Authorization: `${jwt}`,
 				"Access-Control-Allow-Origin": "*",
 				"Access-Control-Allow-Credentials": true,

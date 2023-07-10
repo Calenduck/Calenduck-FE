@@ -28,15 +28,15 @@ code {
 }
 
 .title_sub{
-  background-color: gray;
+  background-color: yellow;
   width: 60%;
 
   margin: auto;
 }
 .item_style{
-  width: 20vw;
-  height: 30vh;
-  background-color: gray;
+  width: 13vw;
+  height: 20vw;
+  /* background-color: gray; */
   margin: 1vw;
 }
 .to_right{
@@ -47,12 +47,15 @@ code {
 }
 .img{
   width: 30vw;
-  height: 50vh;
+  height: 30vh;
 }
 .btn-hide{
   visibility:hidden;
 }
-
+.img-detail{
+  width: 30vw;
+  height: 50vh;
+}
 
 .flip-card-inner {
   position: relative;
