@@ -9,6 +9,7 @@ import {
 	getWantListType,
 	postWantListAddType,
 	getLoginType,
+	getSearchType,
 } from "../reducer";
 const apiAddress = process.env.REACT_APP_ADDRESS;
 const getLogin = async (action: getLoginType) => {
@@ -36,6 +37,12 @@ const getTotalCheckList = (action: getTotalCheckType) => {
 			// "Access-Control-Allow-Methods": "GET,POST,OPTIONS,DELETE,PUT",
 		},
 	});
+};
+const getSearchList = (action: getSearchType) => {
+	return axios.get(
+		`http://${apiAddress}:8080/performances?prfnm${action.payload.prfnm}&prfcast=${action.payload.prfcast}`,
+		{},
+	);
 };
 // const getTotalCheckList = async (action: getTotalCheckType) => {
 // 	return await axios.get("http://localhost:3000/data/total.json", {
@@ -73,20 +80,38 @@ const getWantList = (action: getWantListType) => {
 // 		},
 // 	});
 // };
+//`http://${apiAddress}:8080/performances/${String(action.payload.mt20id)}/bookmark/${String(action.payload.year)}/${String(action.payload.month)}/${String(action.payload.day)}`,
+const postWantListAdd = async (action: postWantListAddType) => {
+	const jwt = await localStorage.getItem("jwt");
+	console.log(jwt);
+	// return axios.post(
+	// 	`http://${apiAddress}:8080/performances/${String(
+	// 		action.payload.mt20id,
+	// 	)}/bookmark/${String(action.payload.year)}/${String(
+	// 		action.payload.month,
+	// 	)}/${String(action.payload.day)}`,
+	// 	{
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 			Authorization: `${jwt}`,
+	// 			"Access-Control-Allow-Origin": "*",
+	// 			"Access-Control-Allow-Credentials": true,
+	// 			"Access-Control-Allow-Methods": "GET,POST,OPTIONS,DELETE,PUT",
+	// 		},
+	// 	},
+	// );
+	const myHeaders: HeadersInit = new Headers();
+	myHeaders.set("Authorization", `${jwt}`);
 
-const postWantListAdd = (action: postWantListAddType) => {
-	const jwt = localStorage.getItem("jwt");
-	console.log(action.payload.year);
-	return axios.post(
-		`http://${apiAddress}:8080/performances/${action.payload.mt20id}/bookmark/${action.payload.year}/${action.payload.month}/${action.payload.day}`,
+	return fetch(
+		`http://${apiAddress}:8080/performances/${String(
+			action.payload.mt20id,
+		)}/bookmark/${String(action.payload.year)}/${String(
+			action.payload.month,
+		)}/${String(action.payload.day)}`,
 		{
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `${jwt}`,
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Credentials": true,
-				"Access-Control-Allow-Methods": "GET,POST,OPTIONS,DELETE,PUT",
-			},
+			method: "POST",
+			headers: myHeaders,
 		},
 	);
 };
@@ -117,6 +142,20 @@ function* getResponseTotalCheck(action: any): Generator<any> {
 		console.log(err);
 		yield put({
 			type: ActionType.GET_TOTAL_CHECK_FAIL,
+			data: err.response.data,
+		});
+	}
+}
+
+function* getResponseSearch(action: any): Generator<any> {
+	try {
+		const result: any = yield call(getSearchList, action);
+		console.log(result);
+		yield put({ type: ActionType.GET_SEARCH_SUCCESS, data: result.data });
+	} catch (err: any) {
+		console.log(err);
+		yield put({
+			type: ActionType.GET_SEARCH_FAIL,
 			data: err.response.data,
 		});
 	}
@@ -155,6 +194,7 @@ function* postResponseWantListAdd(action: any): Generator<any> {
 function* watchGetApi() {
 	yield takeLatest(ActionType.GET_LOGIN, getResponseLogin);
 	yield takeLatest(ActionType.GET_TOTAL_CHECK, getResponseTotalCheck);
+	yield takeLatest(ActionType.GET_SEARCH, getResponseSearch);
 	yield takeLatest(ActionType.GET_WANT_LIST, getResponseWantList);
 	yield takeLatest(ActionType.POST_WANT_LIST_ADD, postResponseWantListAdd);
 }

@@ -26,6 +26,7 @@ export default () => {
 	const today = new Date();
 	const [totalList, setTotalList] = useState(["1", "2", "3"]);
 	const [checkJwt, setCheckJwt] = useState(false);
+	const [searchText, setSearchText] = useState();
 	//var totalList = ['1','2','3'];
 	useEffect(() => {
 		dispatch(getTotalCheck());
@@ -131,7 +132,14 @@ export default () => {
 			
 		</div>
 	));
-
+	const serachArtist=(e:any)=>{
+		console.log(e)
+		if( e.key === "Enter"){
+			console.log(searchText)
+			e.preventDefault()
+		}
+		
+	}
 	return (
 		<div>
 			<div className="center_aligin">
@@ -179,6 +187,9 @@ export default () => {
 								id="standard-search"
 								type="search"
 								variant="standard"
+								label="나의 아티스트를 검색해 보세요"
+								onKeyDown={(e)=>{serachArtist(e)}}
+								onChange={(e:any)=>{setSearchText(e.nativeEvent.srcElement.value); console.log(e)}}
 							/>
 						</Box>
 					</div>

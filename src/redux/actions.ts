@@ -11,6 +11,11 @@ const getTotalCheck = () => {
 		type: ActionType.GET_TOTAL_CHECK,
 	};
 };
+const getSeacrch = (prfnm: string, prfcast: string) => {
+	return {
+		type: ActionType.GET_SEARCH,
+	};
+};
 const getWant = () => {
 	return {
 		type: ActionType.GET_WANT_LIST,
@@ -44,8 +49,16 @@ type ActionObject =
 	| ReturnType<typeof getWant>
 	| ReturnType<typeof getTotalCheck>
 	| ReturnType<typeof postWantAdd>
-	| ReturnType<typeof getLoginAction>;
+	| ReturnType<typeof getLoginAction>
+	| ReturnType<typeof getSeacrch>;
 
 type ActionInfoObj = ReturnType<typeof setDetailInfo>;
-export { getTotalCheck, getWant, setDetailInfo, postWantAdd, getLoginAction };
+export {
+	getTotalCheck,
+	getWant,
+	setDetailInfo,
+	postWantAdd,
+	getLoginAction,
+	getSeacrch,
+};
 export type { ActionObject, ActionInfoObj };

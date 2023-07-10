@@ -7,6 +7,10 @@ export type getLoginType = {
 	type: string;
 	payload: any;
 };
+export type getSearchType = {
+	type: string;
+	payload: any;
+};
 export type getTotalCheckType = {
 	type: string;
 	payload: Array<any>;
@@ -26,6 +30,7 @@ export type postWantListAddType = {
 	payload:any
 };
 
+
 const getLoginReducer = async (
 	state: getLoginType,
 	action: ActionObject,
@@ -44,6 +49,28 @@ const getLoginReducer = async (
 		case ActionType.GET_LOGIN_FAIL:
 			return {
 				type: ActionType.GET_LOGIN_FAIL,
+				payload: "fail",
+			};
+	}
+};
+const getSearchReducer = async (
+	state: getSearchType,
+	action: ActionObject,
+) => {
+	switch (action.type) {
+		case ActionType.GET_SEARCH:
+			return {
+				type: ActionType.GET_SEARCH,
+			};
+		case ActionType.GET_SEARCH_SUCCESS:
+
+			return {
+				type: ActionType.GET_SEARCH_SUCCESS,
+				payload:await action,
+			};
+		case ActionType.GET_SEARCH_FAIL:
+			return {
+				type: ActionType.GET_SEARCH_FAIL,
 				payload: "fail",
 			};
 	}
@@ -139,6 +166,7 @@ const setDetailInfoReducer = (
 
 const rootReducer = combineReducers({
 	getLoginReducer,
+	getSearchReducer,
 	getTotalCheckReducer,
 	getWantListReducer,
 	setDetailInfoReducer,
