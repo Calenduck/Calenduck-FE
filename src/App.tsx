@@ -5,6 +5,7 @@ import "../src/css/index.css"
 import MainPage from "./component/mainPage";
 import WantListPage from "./component/wantListPage";
 import LoginPage from "./component/loginPage";
+import Search from "./component/search";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
 				<Route path="/" element={<MainPage />} />
 				<Route path="/auth" element={<LoginPage />} />
 				<Route path="/wantList" element={<WantListPage />} />
+				<Route path="/search" element={<Search />} />
 			</Routes>
 		</BrowserRouter>
 	);

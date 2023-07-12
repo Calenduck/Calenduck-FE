@@ -38,5 +38,7 @@ export interface InfoObj {
 	pcseguidance?: string;
 	mt20id?: string;
 	reservationDate?: string;
+	stdate?:string;
+	eddate?:string
 
 }

@@ -15,7 +15,7 @@ const apiAddress = process.env.REACT_APP_ADDRESS;
 const getLogin = async (action: getLoginType) => {
 	console.log(action);
 	return await axios.get(
-		`http://${apiAddress}:8080/users/kakao/login?code=${action.payload}`,
+		`https://${apiAddress}:8080/users/kakao/login?code=${action.payload}`,
 		{
 			headers: {
 				// "Content-Type": "application/json",
@@ -28,7 +28,7 @@ const getLogin = async (action: getLoginType) => {
 };
 //전체조회
 const getTotalCheckList = (action: getTotalCheckType) => {
-	return axios.get(`http://${apiAddress}:8080/performances`, {
+	return axios.get(`https://${apiAddress}:8080/performances`, {
 		headers: {
 			// "Content-Type": "application/json",
 			// Authorization: `Bearer ${process.env.REACT_APP_KEY}`,
@@ -39,9 +39,14 @@ const getTotalCheckList = (action: getTotalCheckType) => {
 	});
 };
 const getSearchList = (action: getSearchType) => {
+	console.log(action.payload)
 	return axios.get(
-		`http://${apiAddress}:8080/performances?prfnm${action.payload.prfnm}&prfcast=${action.payload.prfcast}`,
-		{},
+		`https://${apiAddress}:8080/performances`,
+		{
+			params:{
+				prfnm:String(action.payload)
+			}
+		},
 	);
 };
 // const getTotalCheckList = async (action: getTotalCheckType) => {
@@ -58,7 +63,7 @@ const getSearchList = (action: getSearchType) => {
 //찜목록 조회
 const getWantList = (action: getWantListType) => {
 	const jwt = localStorage.getItem("jwt");
-	return axios.get(`http://${apiAddress}:8080/performances/bookmark`, {
+	return axios.get(`https://${apiAddress}:8080/performances/bookmark`, {
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `${jwt}`,
@@ -104,7 +109,7 @@ const postWantListAdd = async (action: postWantListAddType) => {
 	myHeaders.set("Authorization", `${jwt}`);
 
 	return fetch(
-		`http://${apiAddress}:8080/performances/${String(
+		`https://${apiAddress}:8080/performances/${String(
 			action.payload.mt20id,
 		)}/bookmark/${String(action.payload.year)}/${String(
 			action.payload.month,

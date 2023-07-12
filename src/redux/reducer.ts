@@ -63,10 +63,10 @@ const getSearchReducer = async (
 				type: ActionType.GET_SEARCH,
 			};
 		case ActionType.GET_SEARCH_SUCCESS:
-
+			console.log(action)
 			return {
 				type: ActionType.GET_SEARCH_SUCCESS,
-				payload:await action,
+				payload:action,
 			};
 		case ActionType.GET_SEARCH_FAIL:
 			return {

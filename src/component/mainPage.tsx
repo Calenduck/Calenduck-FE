@@ -8,9 +8,10 @@ import DetailModal from "./detailModal";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
-import { getTotalCheck, setDetailInfo } from "../redux/actions";
+import { getTotalCheck, setDetailInfo,getSeacrch } from "../redux/actions";
 import { InfoObj } from "../redux/types";
 import { addDays, addHours, format, setHours } from "date-fns";
 import "../css/index.css";
@@ -18,6 +19,8 @@ import logo from "../assets/logo.png";
 
 export default () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const totalListState: any = useSelector(
 		(state: RootState) => state.getTotalCheckReducer,
 	);
@@ -26,7 +29,7 @@ export default () => {
 	const today = new Date();
 	const [totalList, setTotalList] = useState(["1", "2", "3"]);
 	const [checkJwt, setCheckJwt] = useState(false);
-	const [searchText, setSearchText] = useState();
+	const [searchText, setSearchText] = useState("");
 	//var totalList = ['1','2','3'];
 	useEffect(() => {
 		dispatch(getTotalCheck());
@@ -91,18 +94,6 @@ export default () => {
 		location.reload();
 	};
 	const setDetailInfoState = (key: any) => {
-		// const selectedObj: InfoObj = {
-		// 	poster : key.poster,
-		// 	prfnm : key.prfnm,
-		// 	prfcast : key.prfcast,
-		// 	genrenm : key.genrenm,
-		// 	fcltynm:key.fcltynm,
-		// 	dtguidance : key.dtguidance,
-		// 	stdate : key.stdate,
-		// 	eddate: key.eddate,
-		// 	pcseguidance:key.pcseguidance,
-		// 	mt20id:key.mt20id
-		// };
 		const selectedObj: InfoObj = {
 			poster: key.poster,
 			prfnm: key.prfnm,
@@ -136,6 +127,8 @@ export default () => {
 		console.log(e)
 		if( e.key === "Enter"){
 			console.log(searchText)
+			dispatch(getSeacrch(searchText))
+			navigate("/search");
 			e.preventDefault()
 		}
 		

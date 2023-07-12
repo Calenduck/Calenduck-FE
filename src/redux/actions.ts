@@ -11,9 +11,10 @@ const getTotalCheck = () => {
 		type: ActionType.GET_TOTAL_CHECK,
 	};
 };
-const getSeacrch = (prfnm: string, prfcast: string) => {
+const getSeacrch = (search:string) => {
 	return {
 		type: ActionType.GET_SEARCH,
+		payload:search
 	};
 };
 const getWant = () => {
